@@ -1,12 +1,11 @@
  //Server Creation
 
- const express = require("express");
-
  // 1)import Express
- const Express = require.Express;
+ const express = require('express');
+ //  const Express = require.Express;
 
  //import data services
- const dataservices = require('./services/data.service')
+ const dataservice = require('./services/data.service')
 
  // 2)Create an application using the Exxpress
  const app = express();
@@ -20,7 +19,6 @@
  })
 
  // 4)resolving HTTP request
-
  //get,post,put,patch,delete
  //resolving get request
  // app.get('/',(req,res)=>{
@@ -51,36 +49,41 @@
  //Registration request
  app.post('/register', (req, res) => {
      console.log(req.body);
-     const result = dataservices.register(req.body.acno, req.body.username, req.body.password)
-     res.status(result.statusCode).json(result)
-     res.send('register successfull')
+     const result = dataservice.register(req.body.acno, req.body.username, req.body.password)
+     res.status(result.statusCode).json(result);
+     //  res.send('register successfull')
  })
 
  //Login request
  app.post('/login', (req, res) => {
      console.log(req.body);
-     const result = dataservices.login(req.body.acno, req.body.password)
-     res.status(result.statusCode).json(result)
-     res.send('login successfull')
+     const result = dataservice.login(req.body.acno, req.body.password)
+     res.status(result.statusCode).json(result);
+     //  res.send('login successfull')
  })
 
 
  //deposite request
- app.post('/deposit', (req, res) => {
+ app.post('/deposite', (req, res) => {
      console.log(req.body);
-     const result = dataservices.deposit(req.body.acno, req.body.password, res.body.amount)
-     res.status(result.statusCode).json(result)
+     const result = dataservice.deposite(req.body.acno, req.body.password, req.body.amount)
+     res.status(result.statusCode).json(result);
  })
- //withdraw request
+ //  withdraw request
 
- // app.post('/withdraw',(req,res)=>{
- //     console.log(req.body);
- //     const result=dataservices.withdraw(req.body.acno,req.body.password,res.body.amount)
- //     res.status(result.statusCode).json(result)
- // })
+ app.post('/withdraw', (req, res) => {
+    console.log(req.body);
+    const result = dataservice.withdraw(req.body.acno, req.body.password, req.body.amount)
+    res.status(result.statusCode).json(result);
+})
 
 
  //transaction request
+ app.post('/transaction', (req, res) => {
+    console.log(req.body);
+    const result = dataservice.getTransaction(req.body.acno)
+    res.status(result.statusCode).json(result);
+})
 
 
  //delete request

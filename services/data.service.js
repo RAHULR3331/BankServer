@@ -85,7 +85,7 @@ login = (acno, pswd) => {
 }
 
 //deposite
-deposit = (acno, pswd, amt) => {
+deposite = (acno, pswd, amt) => {
     var amount = parseInt(amt);
     if (acno in userDetails) {
         if (pswd == userDetails[acno]['password']) {
@@ -118,53 +118,62 @@ deposit = (acno, pswd, amt) => {
     }
 }
 
-// withdraw=(acno, pswd, amt)=>{
-//     var amount = parseInt(amt);
+withdraw = (acno, pswd, amt) => {
+    var amount = parseInt(amt);
 
-//     if (acno in userDetails) {
-//         if (pswd == userDetails[acno]['password']) {
-//             if (userDetails[acno]['balance'] > amount) {
-//                 userDetails[acno]['balance'] -= amount;
-//                 userDetails[acno]['transaction'].push({
-//                     Type: 'debit',
-//                     Amount: amount
-//                 })
-//                 return {
-//                     status: 'True',
-//                     statusCode: 200,
-//                     message: `${amount} is creadited and balance is ${userDetails[acno]["balance"]}`
-//                 }
-//                 //   this.saveDetails();
-//                 console.log(userDetails)
-//                 return userDetails[acno]['balance'];
-//             } else {
-//                 alert('Transaction failed')
-//                 return {
-//                     status: 'false',
-//                     statusCode: 400,
-//                     message: 'Transaction failed1'
-//                 }
-//             }
-//         } else {
-//             return {
-//                 status: 'false',
-//                 statusCode: 400,
-//                 message: 'Transaction failed2'
-//             }
-//         }
-//     } else {
-//         return {
-//             status: 'false',
-//             statusCode: 400,
-//             message: 'Transaction failed3'
-//         }
-//     }
+    if (acno in userDetails) {
+        if (pswd == userDetails[acno]['password']) {
+            if (userDetails[acno]['balance'] > amount) {
+                userDetails[acno]['balance'] -= amount;
+                userDetails[acno]['transaction'].push({
+                    Type: 'debit',
+                    Amount: amount
+                })
+                return {
+                    status: 'True',
+                    statusCode: 200,
+                    message: `${amount} is creadited and balance is ${userDetails[acno]["balance"]}`
+                }
+                //   this.saveDetails();
+                console.log(userDetails)
+                return userDetails[acno]['balance'];
+            } else {
+                // alert('Transaction failed')
+                return {
+                    status: 'false',
+                    statusCode: 400,
+                    message: 'Transaction failed1'
+                }
+            }
+        } else {
+            return {
+                status: 'false',
+                statusCode: 400,
+                message: 'Transaction failed2'
+            }
+        }
+    } else {
+        return {
+            status: 'false',
+            statusCode: 400,
+            message: 'Transaction failed3'
+        }
+    }
 
-// }
+}
+// Transaction
+getTransaction = (acno) => {
+    return {
+        status: 'true',
+        statusCode: 200,
+        Transaction: userDetails[acno]['transaction']
+    }
+}
 
 module.exports = {
     register,
     login,
-    deposit,
-    // withdraw
+    deposite,
+    withdraw,
+    getTransaction
 }
