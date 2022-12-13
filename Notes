@@ -1,0 +1,33 @@
+Server Creation = Nodejs + Express
+-------------------------------------
+
+Basic Commands
+-------------------------------------
+
+1)Creation of the package.json = npm init
+2)Creation of the node module = npm i Express
+
+Basic Steps
+------------
+
+1)Creation of folder (BankServer)
+2)Create Package.json
+3)Install Express
+4)Create index.js
+5)Import Express inside the index.js
+6)Create an app using the Express
+7)Setup Port number
+8)Resolving HTTP Request
+    Get    - To get the data
+    post   - To post the data
+    put    - To update data partially
+    patch  - To update data completely
+    delete - To delete the data completely
+
+9)HTTP response code
+    1xx - Information
+    2xx - Successfull
+    3xx - Redirection
+    4xx - Client error
+    5xx - Server error
+    
