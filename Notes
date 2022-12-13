@@ -31,5 +31,7 @@ Basic Steps
     4xx - Client error
     5xx - Server error
     
-10)JWT Tokenf
+10)JWT Token
+    Install JWT - npm i jsonwebtoken
+    To generate a Token - sign()
  

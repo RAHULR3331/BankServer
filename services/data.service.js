@@ -1,3 +1,5 @@
+const jwt = require('JsonWebToken');
+
 //database
 userDetails = {
     1000: {
