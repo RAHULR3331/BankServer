@@ -34,4 +34,11 @@ Basic Steps
 10)JWT Token
     Install JWT - npm i jsonwebtoken
     To generate a Token - sign()
+
+11) Middleware 
+    It comes in the middle of the request and response cycle of nodeJs execution proscess
+        1) Application specific middleware - For the entire application
+            -req,res,next
+        2) Router specific middleware - validate token - verify() - jwtwebtoken
+
  

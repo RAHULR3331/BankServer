@@ -1,7 +1,7 @@
- // 1 import mongoose
+ // 1.import mongoose
  const mongoose=require("mongoose");
- //2 state connection string via mongoose
- mongoose.connect('mongodb://localstorage:27017/Bankserver.user',
+ //2.state connection string via mongoose
+ mongoose.connect('mongodb://localhost:27017/Bankserver.users',
  {
 useNewUrlParser:true
  });
@@ -10,14 +10,14 @@ useNewUrlParser:true
 
  const User=mongoose.model('User',
  {
-    //schema creation
+    //Schema creation
     acno:Number,
     username:String,
     password:String,
     balance:Number,
     transaction:[]
  })
- //export collection 
+ //Export collection
  module.exports={
     User
  }
