@@ -1,11 +1,17 @@
  //Server Creation
 
+
+
+
  // 1)import Express
  const express = require('express');
- //  const Express = require.Express;
+
 
  //import data services
  const dataservice = require('./services/data.service')
+ //import jwt
+ const jwt = require('jsonWebtoken')
+
 
  // 2)Create an application using the Exxpress
  const app = express();
@@ -17,6 +23,36 @@
  app.listen(3000, () => {
      console.log('listening on port 3000 ');
  })
+ //Application spesific middleware
+ const appMiddileeware = (req, res, next) => {
+     console.log("Application spesific middleware");
+     next();
+ }
+ app.use(appMiddileeware)
+
+ //Router specific middleware\
+ const jwtMiddleware = (req, res, next) => {
+ try {
+    
+         console.log("Router spesific middleware");
+         const token = req.headers['x-access-token'];
+         const data = jwt.verify(token, 'superkey2022');
+         console.log(data);
+         next();
+     }
+
+
+ catch{
+    res.status(422).json({
+        statusCode:422,
+        status:false,
+        message:"please login first"
+    })
+ }
+}
+
+
+
 
  // 4)resolving HTTP request
  //get,post,put,patch,delete
@@ -49,8 +85,12 @@
  //Registration request
  app.post('/register', (req, res) => {
      console.log(req.body);
-     const result = dataservice.register(req.body.acno, req.body.username, req.body.password)
-     res.status(result.statusCode).json(result);
+     dataservice.register(req.body.acno, req.body.username, req.body.password)
+     .then(result=>{
+        res.status(result.statusCode).json(result);
+
+     })
+     
      //  res.send('register successfull')
  })
 
@@ -64,26 +104,26 @@
 
 
  //deposite request
- app.post('/deposite', (req, res) => {
+ app.post('/deposite', jwtMiddleware, (req, res) => {
      console.log(req.body);
      const result = dataservice.deposite(req.body.acno, req.body.password, req.body.amount)
      res.status(result.statusCode).json(result);
  })
  //  withdraw request
 
- app.post('/withdraw', (req, res) => {
-    console.log(req.body);
-    const result = dataservice.withdraw(req.body.acno, req.body.password, req.body.amount)
-    res.status(result.statusCode).json(result);
-})
+ app.post('/withdraw', jwtMiddleware, (req, res) => {
+     console.log(req.body);
+     const result = dataservice.withdraw(req.body.acno, req.body.password, req.body.amount)
+     res.status(result.statusCode).json(result);
+ })
 
 
  //transaction request
- app.post('/transaction', (req, res) => {
-    console.log(req.body);
-    const result = dataservice.getTransaction(req.body.acno)
-    res.status(result.statusCode).json(result);
-})
+ app.post('/transaction', jwtMiddleware, (req, res) => {
+     console.log(req.body);
+     const result = dataservice.getTransaction(req.body.acno)
+     res.status(result.statusCode).json(result);
+ })
 
 
  //delete request
