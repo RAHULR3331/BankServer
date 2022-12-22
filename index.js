@@ -9,6 +9,9 @@
 
  //import data services
  const dataservice = require('./services/data.service')
+
+ //import cors
+ const cors =  require('cors')
  //import jwt
  const jwt = require('jsonWebtoken')
 
@@ -18,6 +21,11 @@
 
  //To parse JSON from request body
  app.use(express.json())
+ 
+//give command to share data via cors
+ app.use(cors({
+    origin:'http://localhost:4200'
+ }))
 
  // 3)Create a Port Number
  app.listen(3000, () => {
@@ -97,8 +105,10 @@
  //Login request
  app.post('/login', (req, res) => {
      console.log(req.body);
-     const result = dataservice.login(req.body.acno, req.body.password)
-     res.status(result.statusCode).json(result);
+     dataservice.login(req.body.acno, req.body.password)
+     .then(result=>{
+        res.status(result.statusCode).json(result);
+     })    
      //  res.send('login successfull')
  })
 
@@ -106,23 +116,29 @@
  //deposite request
  app.post('/deposite', jwtMiddleware, (req, res) => {
      console.log(req.body);
-     const result = dataservice.deposite(req.body.acno, req.body.password, req.body.amount)
-     res.status(result.statusCode).json(result);
+     dataservice.deposite(req.body.acno, req.body.password, req.body.amount)
+     .then(result=>{
+        res.status(result.statusCode).json(result);
+     })
  })
  //  withdraw request
 
  app.post('/withdraw', jwtMiddleware, (req, res) => {
      console.log(req.body);
-     const result = dataservice.withdraw(req.body.acno, req.body.password, req.body.amount)
-     res.status(result.statusCode).json(result);
+     dataservice.withdraw(req.body.acno, req.body.password, req.body.amount)
+     .then(result=>{
+        res.status(result.statusCode).json(result);
+     })
  })
 
 
  //transaction request
  app.post('/transaction', jwtMiddleware, (req, res) => {
      console.log(req.body);
-     const result = dataservice.getTransaction(req.body.acno)
-     res.status(result.statusCode).json(result);
+     dataservice.getTransaction(req.body.acno)
+     .then(result=>{
+        res.status(result.statusCode).json(result);
+     })
  })
 
 

@@ -1,4 +1,4 @@
-const jwt = require('JsonWebToken');
+const jwt = require('jsonwebtoken');
 
 //import DB
 const db = require("./db");
@@ -36,66 +36,123 @@ userDetails = {
 }
 
 const register = (acno, username, password) => {
-        return db.User.findOne({
-                acno
-            })
-            .then(user => {
-                    if (user) {
-                        return {
-                            status: 'false',
-                            statusCode: 400,
-                            message: 'user already registered'
-                        }
-                    }
+    return db.User.findOne({
+            acno
+        })
+        .then(user => {
+            if (user) {
+                return {
+                    status: 'false',
+                    statusCode: 400,
+                    message: 'user already registered'
+                }
+            } else {
+                const newUser = new db.User({
+                    acno,
+                    username,
+                    password,
+                    balance: 0,
+                    transaction: []
+                })
 
+                newUser.save();
+                return {
+                    status: 'True',
+                    statusCode: 200,
+                    message: 'Register successfull'
+                }
 
-                 else {
-                    const newUser = new db.user({
-                        acno,
-                        username,
-                        password,
-                        balance: 0,
-                        transaction: []
-                    })
+            }
+        })
+}
+//Login
+// login = (acno, pswd) => {
+//     if (acno in userDetails) {
+//         if (pswd == userDetails[acno]['password']) {
+//             currentUser = userDetails[acno]['username'];
+//             currentAcno = acno;
+//             //To generatee token
+//             const token = jwt.sign({
+//                     currentAcno: acno
+//                 },
+//                 'superkey2022');
+//             //It will generate a number and it assign to token.
+//             return {
+//                 status: 'True',
+//                 statusCode: 200,
+//                 message: 'Login successfull',
+//                 token: token
 
-                    newUser.save();
-                    return {
-                        status: 'True',
-                        statusCode: 200,
-                        message: 'Register successfull'
-                    }
- 
+//             }
+
+//         } else {
+//             return {
+//                 status: 'false',
+//                 statusCode: 400,
+//                 message: 'password incorrect'
+//             }
+
+//         }
+//     } else {
+//         return {
+//             status: 'false',
+//             statusCode: 400,
+//             message: 'Invalid user details'
+//         }
+//     }
+// }
+const login = (acno, pswd) => {
+    return db.User.findOne({
+            acno,
+            password: pswd
+        })
+        .then(user => {
+            if (user) {
+                currentUser = user.username
+                currentAcno = acno
+                const token = jwt.sign({
+                    currentAcno: acno
+                }, 'superkey2022') //to generate token
+                return {
+                    status: 'true',
+                    statusCode: 200,
+                    message: "login sucessfull",
+                    token: token
+                }
+
+            } else {
+                return {
+                    status: 'false',
+                    statusCode: 400,
+                    message: "invalid userdetails"
                 }
             }
-        )}
-        //Login
-        login = (acno, pswd) => {
-            if (acno in userDetails) {
-                if (pswd == userDetails[acno]['password']) {
-                    currentUser = userDetails[acno]['username'];
-                    currentAcno = acno;
-                    //To generatee token
-                    const token = jwt.sign({
-                            currentAcno: acno
-                        },
-                        'superkey2022');
-                    //It will generate a number and it assign to token.
-                    return {
-                        status: 'True',
-                        statusCode: 200,
-                        message: 'Login successfull',
-                        token: token
+        })
+}
 
-                    }
+//deposite
+const deposite = (acno, pswd, amt) => {
+    var amount = parseInt(amt);
+    return db.User.findOne({
+            acno,
+            pswd
+        })
+        .then(user => {
+            if (user) {
+                user.balance += amount;
+                user.transaction.push({
+                    Type: 'credit',
+                    Amount: amount
 
-                } else {
-                    return {
-                        status: 'false',
-                        statusCode: 400,
-                        message: 'password incorrect'
-                    }
-
+                })
+                user.save();
+                return {
+                    status: 'true',
+                    statusCode: 200,
+                    message: `${amount} is credited and balance is ${user.balance}`
                 }
+                // console.log(userDetails)
+                // return userDetails[acno]['balance'];
             } else {
                 return {
                     status: 'false',
@@ -103,98 +160,71 @@ const register = (acno, username, password) => {
                     message: 'Invalid user details'
                 }
             }
-        }
+        })
+}
 
-        //deposite
-        deposite = (acno, pswd, amt) => {
-            var amount = parseInt(amt);
-            if (acno in userDetails) {
-                if (pswd == userDetails[acno]['password']) {
-                    userDetails[acno]['balance'] += amount;
-                    userDetails[acno]['transaction'].push({
-                        Type: 'credit',
+const withdraw = (acno, pswd, amt) => {
+    var amount = parseInt(amt);
+
+    return db.User.findOne({
+            acno,
+            pswd
+        })
+        .then(user => {
+            if (user) {
+                if (user.balance > amount) {
+                    user.balance -= amount;
+                    user.transaction.push({
+                        Type: 'debit',
                         Amount: amount
-
                     })
+
+                    user.save();
                     return {
-                        status: 'true',
+                        status: 'True',
                         statusCode: 200,
-                        message: `${amount} is credited and balance is ${userDetails[acno]["balance"]}`
-                    }
-                    // console.log(userDetails)
-                    // return userDetails[acno]['balance'];
-                } else {
-                    return {
-                        status: 'false',
-                        statusCode: 400,
-                        message: 'password missmatch'
-                    }
-                }
-            } else {
-                return {
-                    status: 'false',
-                    statusCode: 400,
-                    message: 'Invalid user details'
-                }
-            }
-        }
-
-        withdraw = (acno, pswd, amt) => {
-            var amount = parseInt(amt);
-
-            if (acno in userDetails) {
-                if (pswd == userDetails[acno]['password']) {
-                    if (userDetails[acno]['balance'] > amount) {
-                        userDetails[acno]['balance'] -= amount;
-                        userDetails[acno]['transaction'].push({
-                            Type: 'debit',
-                            Amount: amount
-                        })
-                        return {
-                            status: 'True',
-                            statusCode: 200,
-                            message: `${amount} is creadited and balance is ${userDetails[acno]["balance"]}`
-                        }
-                        //   this.saveDetails();
-                        console.log(userDetails)
-                        return userDetails[acno]['balance'];
-                    } else {
-                        // alert('Transaction failed')
-                        return {
-                            status: 'false',
-                            statusCode: 400,
-                            message: 'Transaction failed1'
-                        }
+                        message: `${amount} is creadited and balance is ${user.balance}`
                     }
                 } else {
                     return {
                         status: 'false',
                         statusCode: 400,
-                        message: 'Transaction failed2'
+                        message: 'Transaction failed'
                     }
                 }
-            } else {
+            }
+        })
+}
+// Transaction
+const getTransaction = (acno) => {
+    var amount = parseInt(amount);
+    return db.User.findOne({
+            acno
+        })
+        .then(user => {
+            if (user) {
                 return {
-                    status: 'false',
-                    statusCode: 400,
-                    message: 'Transaction failed3'
+
+                    status: 'true',
+                    statusCode: 200,
+                    Transaction: user.transaction
                 }
+            } else {
+                return{
+                status: 'false',
+                statusCode: 400,
+                message: "user not found"
             }
-
-        }
-        // Transaction
-        getTransaction = (acno) => {
-            return {
-                status: 'true',
-                statusCode: 200,
-                Transaction: userDetails[acno]['transaction']
             }
-        }
+        })
+    user.save();
 
-        module.exports = {
-            register,
-            login,
-            deposite,
-            withdraw,
-            getTransaction
-        }
+}
+
+module.exports = {
+    register,
+    login,
+    deposite,
+    withdraw,
+    getTransaction
+}

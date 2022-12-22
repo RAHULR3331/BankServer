@@ -1,7 +1,7 @@
  // 1.import mongoose
  const mongoose=require("mongoose");
  //2.state connection string via mongoose
- mongoose.connect('mongodb://localhost:27017/Bankserver.users',
+ mongoose.connect('mongodb://localhost:27017/Bankserver',
  {
 useNewUrlParser:true
  });

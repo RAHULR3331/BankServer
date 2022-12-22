@@ -41,4 +41,25 @@ Basic Steps
             -req,res,next
         2) Router specific middleware - validate token - verify() - jwtwebtoken
 
+12)Database Integration 
+    1)install mongoose - npm i mongoose
+
+13)Synchronous function resolvng - promise
+
+    1)Resolve state - .then()
+    2)Reject state - catch()
+
+14)CORS - Cross origin resource sharing 
+    install cors - npm i cors
+   
+       port 4200(Angular)----request------>3000(node)(receive)
+
+15)Asynchronous call - RxJs - (Reactive Extenstio  for JavaScript)
+    Js - Promise
+    Ts - RxJs(library)
+
+        1)Resolved - Subscribe()
+        2)Reject - catch
+        
+
  
