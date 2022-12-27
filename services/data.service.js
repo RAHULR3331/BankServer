@@ -48,9 +48,9 @@ const register = (acno, username, password) => {
                 }
             } else {
                 const newUser = new db.User({
-                    acno,
-                    username,
-                    password,
+                    acno:acno,
+                    username:username,
+                    password:password,
                     balance: 0,
                     transaction: []
                 })
@@ -117,7 +117,9 @@ const login = (acno, pswd) => {
                     status: 'true',
                     statusCode: 200,
                     message: "login sucessfull",
-                    token: token
+                    token: token,
+                    currentAcno:acno,
+                    currentUser:currentUser
                 }
 
             } else {
