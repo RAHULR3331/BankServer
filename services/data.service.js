@@ -209,7 +209,7 @@ const getTransaction = (acno) => {
 
                     status: 'true',
                     statusCode: 200,
-                    Transaction: user.transaction
+                    transaction: user.transaction
                 }
             } else {
                 return{
@@ -219,14 +219,34 @@ const getTransaction = (acno) => {
             }
             }
         })
-    user.save();
 
 }
+const deleteAcc=(acno)=>{
+    return db.User.deleteOne({acno})
+    .then(user=>{
+        if(user){
+        return{
+            status: 'true',
+            statusCode: 200,
+            message: 'User deleted successfully'
+        }
+    }
+    else{
+        return{
+            status: 'false',
+                statusCode: 400,
+                message: "user not found"
+        }
+    }
+    })
+}
+
 
 module.exports = {
     register,
     login,
     deposite,
     withdraw,
-    getTransaction
+    getTransaction,
+    deleteAcc
 }

@@ -93,7 +93,7 @@
  //Registration request
  app.post('/register', (req, res) => {
      console.log(req.body);
-     dataservice.register(req.body.acno, req.body.username, req.body.password)
+     dataservice.register(req.body.acno, req.body.username, req.body.pswd)
      .then(result=>{
         res.status(result.statusCode).json(result);
 
@@ -105,7 +105,7 @@
  //Login request
  app.post('/login', (req, res) => {
      console.log(req.body);
-     dataservice.login(req.body.acno, req.body.password)
+     dataservice.login(req.body.acno, req.body.pswd)
      .then(result=>{
         res.status(result.statusCode).json(result);
      })    
@@ -116,7 +116,7 @@
  //deposite request
  app.post('/deposite', jwtMiddleware, (req, res) => {
      console.log(req.body);
-     dataservice.deposite(req.body.acno, req.body.password, req.body.amount)
+     dataservice.deposite(req.body.acno, req.body.pswd, req.body.amount)
      .then(result=>{
         res.status(result.statusCode).json(result);
      })
@@ -125,7 +125,7 @@
 
  app.post('/withdraw', jwtMiddleware, (req, res) => {
      console.log(req.body);
-     dataservice.withdraw(req.body.acno, req.body.password, req.body.amount)
+     dataservice.withdraw(req.body.acno, req.body.pswd, req.body.amount)
      .then(result=>{
         res.status(result.statusCode).json(result);
      })
@@ -143,3 +143,9 @@
 
 
  //delete request
+ app.delete('/deleteAcc/:acno', (req, res) => {
+    dataservice.deleteAcc(req.params.acno)
+    .then(result=>{
+       res.status(result.statusCode).json(result);
+    })
+})
